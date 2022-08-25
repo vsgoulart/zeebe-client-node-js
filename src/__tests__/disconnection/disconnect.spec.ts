@@ -5,6 +5,7 @@ import { ZBClient } from '../..'
 process.env.ZEEBE_NODE_LOG_LEVEL = process.env.ZEEBE_NODE_LOG_LEVEL || 'NONE'
 
 const ZEEBE_DOCKER_TAG = '8.0.2'
+const ZEEBE_PORT = 26501
 
 jest.setTimeout(900000)
 
@@ -35,15 +36,15 @@ test('reconnects after a pod reschedule', () =>
 			'camunda/zeebe',
 			ZEEBE_DOCKER_TAG,
 			undefined,
-			26500
+			ZEEBE_PORT
 		)
-			.withExposedPorts(26500)
+			.withExposedPorts(ZEEBE_PORT)
 			.withWaitStrategy(Wait.forLogMessage('Broker is ready!'))
 			.start()
 
 		await delay(10000)
 
-		const zbc = new ZBClient(`localhost`)
+		const zbc = new ZBClient(`localhost:${ZEEBE_PORT}`)
 		// tslint:disable-next-line: no-console
 		log('##### Deploying workflow') // @DEBUG
 
@@ -95,9 +96,9 @@ test('reconnects after a pod reschedule', () =>
 			'camunda/zeebe',
 			ZEEBE_DOCKER_TAG,
 			undefined,
-			26500
+			ZEEBE_PORT
 		)
-			.withExposedPorts(26500)
+			.withExposedPorts(ZEEBE_PORT)
 			.withEnv('ZEEBE_LOG_LEVEL', 'trace')
 			.withWaitStrategy(Wait.forLogMessage('Broker is ready!'))
 			.start()
@@ -141,7 +142,7 @@ test('a worker that started first, connects to a broker that starts later', () =
 		const delay = timeout =>
 			new Promise(res => setTimeout(() => res(null), timeout))
 
-		const zbc = new ZBClient(`localhost`)
+		const zbc = new ZBClient(`localhost:${ZEEBE_PORT}`)
 		worker = zbc
 			.createWorker({
 				taskHandler: job => job.complete(),
@@ -158,9 +159,9 @@ test('a worker that started first, connects to a broker that starts later', () =
 			'camunda/zeebe',
 			ZEEBE_DOCKER_TAG,
 			undefined,
-			26500
+			ZEEBE_PORT
 		)
-			.withExposedPorts(26500)
+			.withExposedPorts(ZEEBE_PORT)
 			.withWaitStrategy(Wait.forLogMessage('Broker is ready!'))
 			.start()
 
