@@ -1,6 +1,6 @@
 {
 	"name": "@vzeta/zeebe-node-test",
-	"version": "8.0.1",
+	"version": "5.0.3",
 	"description": "The Node.js client library for the Zeebe Workflow Automation Engine.",
 	"keywords": [
 		"zeebe",
